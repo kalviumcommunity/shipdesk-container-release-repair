@@ -1,0 +1,31 @@
+name: ShipDesk Release Validation
+on:
+  push:
+    branches: ['**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build versioned container
+        run: docker build -t shipdesk:1.1.0 .
+      - name: Launch using supplied command
+        run: sh launch.txt
+      - name: Validate health and production config
+        run: python scripts/smoke.py
+      - name: Container diagnostics and cleanup
+        if: always()
+        run: |
+          docker logs shipdesk-ca34 || true
+          docker rm -f shipdesk-ca34 || true
+  release-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record review scope only
+        run: echo "Validation review only. Approval NOT REQUESTED. NOT DEPLOYED."
