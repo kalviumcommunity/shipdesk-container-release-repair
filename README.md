@@ -1,6 +1,6 @@
 # ShipDesk Container Release Repair
 
-Modules 3-4 combined CA: three intentional faults, four practical tasks.
+Repair ShipDesk image packaging, host reachability and release-review ordering. Complete the supplied readiness record.
 Tools: Git, Docker, Python 3.10+ on host, GitHub Actions; Bash/Git Bash commands.
 No Python packages, registry push, GCP billing, credentials or deployment.
 
@@ -23,8 +23,7 @@ Missing dependency may let it run early; a green job alone is not safe ordering.
 
 Fork, enable Actions if prompted, clone YOUR fork, switch to fix/shipdesk-release.
 Commands run from repo root. Use python3 below; Windows Git Bash may use python.
-Before timer: Docker operational, base image pre-pulled, host 8080 free, Actions
-available, screenshot/PDF tools ready. Do not remove unrelated containers.
+Docker must be running; internet access needed for base images. Host port 8080 must be free and Actions enabled in your fork. curl is required for host checks. Do not remove unrelated containers.
 
 ```sh
 docker pull python:3.12-alpine
@@ -34,7 +33,7 @@ sh launch.txt
 docker logs shipdesk-ca34
 docker port shipdesk-ca34
 curl --max-time 3 http://127.0.0.1:8080/health
-# Remove only this assessment container before rerun after mapping repair:
+# Remove only this exercise container before rerun after mapping repair:
 docker rm -f shipdesk-ca34
 sh launch.txt
 python3 scripts/smoke.py
@@ -56,7 +55,5 @@ tag push does not create duplicate run. Compare tag target, local HEAD and
 successful branch run commit. Git tag identifies source, not image provenance;
 local image ID need not match runner image ID across machines/architectures.
 
-Final PDF: four labelled task sections, genuine screenshots, author, public
-fork/branch, commit, tag and successful run URL, cause/fix/result notes. No PR,
-video, ZIP or actual cloud deployment. Follow accompanying assessment rubric.
-Cleanup after evidence: docker rm -f shipdesk-ca34 (only your own container).
+Keep genuine failure and recovery output and short cause/fix/result notes. Verify annotated tag, local HEAD and successful branch run identify the same final commit.
+Cleanup: `docker rm -f shipdesk-ca34` (only your exercise container).
