@@ -25,6 +25,7 @@ jobs:
           docker logs shipdesk-ca34 || true
           docker rm -f shipdesk-ca34 || true
   release-review:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - name: Record review scope only
